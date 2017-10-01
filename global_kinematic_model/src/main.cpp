@@ -39,5 +39,5 @@ int main() {
   // should be [0.212132, 0.212132, 0.798488, 1.3]
   auto next_state = globalKinematic(state, actuators, 0.3);
 
-  std::cout << next_state << std::endl;
+  std::cout << "next state is :"<< std::endl << next_state << std::endl;
 }
