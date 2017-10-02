@@ -11,8 +11,8 @@ namespace plt = matplotlibcpp;
 using CppAD::AD;
 
 // TODO: Set N and dt
-size_t N = ? ;
-double dt = ? ;
+size_t N = 15 ;
+double dt = 0.2 ;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -263,7 +263,7 @@ int main() {
   ptsy << -1, -1;
 
   // TODO: fit a polynomial to the above x and y coordinates
-  auto coeffs = ? ;
+  auto coeffs = polyfit(ptsx,pysy,3) ;
 
   // NOTE: free feel to play around with these
   double x = -1;
