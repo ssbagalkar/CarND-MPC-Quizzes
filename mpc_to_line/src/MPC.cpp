@@ -263,17 +263,20 @@ int main() {
   ptsy << -1, -1;
 
   // TODO: fit a polynomial to the above x and y coordinates
-  auto coeffs = polyfit(ptsx,pysy,3) ;
+  auto coeffs = polyfit(ptsx,ptsy,1);
 
   // NOTE: free feel to play around with these
   double x = -1;
   double y = 10;
   double psi = 0;
   double v = 10;
+  //Evaluate the polynomial at current x to get y
+  double y_pred = polyeval(coeffs,x);
   // TODO: calculate the cross track error
-  double cte = ? ;
+  double cte =(y_pred - y);
+ std::cout <<"CTE is :" << '\n' << cte << '\n' ; 
   // TODO: calculate the orientation error
-  double epsi = ? ;
+  double epsi = 0 ;
 
   Eigen::VectorXd state(6);
   state << x, y, psi, v, cte, epsi;
