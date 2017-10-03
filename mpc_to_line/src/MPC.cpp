@@ -274,9 +274,11 @@ int main() {
   double y_pred = polyeval(coeffs,x);
   // TODO: calculate the cross track error
   double cte =(y_pred - y);
- std::cout <<"CTE is :" << '\n' << cte << '\n' ; 
+  std::cout <<"CTE is :" << '\n' << cte << '\n' ;
+  
   // TODO: calculate the orientation error
-  double epsi = 0 ;
+  double epsi = psi- atan(coeffs[1]) ;
+  std::cout << " Orienatation error is :" << '\n' << epsi << std::endl;
 
   Eigen::VectorXd state(6);
   state << x, y, psi, v, cte, epsi;
@@ -306,29 +308,29 @@ int main() {
     a_vals.push_back(vars[7]);
 
     state << vars[0], vars[1], vars[2], vars[3], vars[4], vars[5];
-    std::cout << "x = " << vars[0] << std::endl;
-    std::cout << "y = " << vars[1] << std::endl;
-    std::cout << "psi = " << vars[2] << std::endl;
-    std::cout << "v = " << vars[3] << std::endl;
-    std::cout << "cte = " << vars[4] << std::endl;
-    std::cout << "epsi = " << vars[5] << std::endl;
-    std::cout << "delta = " << vars[6] << std::endl;
-    std::cout << "a = " << vars[7] << std::endl;
-    std::cout << std::endl;
+    //std::cout << "x = " << vars[0] << std::endl;
+    //std::cout << "y = " << vars[1] << std::endl;
+    //std::cout << "psi = " << vars[2] << std::endl;
+    //std::cout << "v = " << vars[3] << std::endl;
+    //std::cout << "cte = " << vars[4] << std::endl;
+    //std::cout << "epsi = " << vars[5] << std::endl;
+    //std::cout << "delta = " << vars[6] << std::endl;
+    //std::cout << "a = " << vars[7] << std::endl;
+    //std::cout << std::endl;
   }
 
   // Plot values
   // NOTE: feel free to play around with this.
   // It's useful for debugging!
-  plt::subplot(3, 1, 1);
-  plt::title("CTE");
-  plt::plot(cte_vals);
-  plt::subplot(3, 1, 2);
-  plt::title("Delta (Radians)");
-  plt::plot(delta_vals);
-  plt::subplot(3, 1, 3);
-  plt::title("Velocity");
-  plt::plot(v_vals);
+  //plt::subplot(3, 1, 1);
+  //plt::title("CTE");
+  //plt::plot(cte_vals);
+  //plt::subplot(3, 1, 2);
+  //plt::title("Delta (Radians)");
+  //plt::plot(delta_vals);
+  //plt::subplot(3, 1, 3);
+  //plt::title("Velocity");
+  //plt::plot(v_vals);
 
-  plt::show();
+  //plt::show();
 }
