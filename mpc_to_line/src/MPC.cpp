@@ -65,7 +65,21 @@ class FG_eval {
     	fg[0] += CppAD::pow(vars[epsi_start + t],2);
 	fg[0] += CppAD::pow(vars[v_start + 1] - ref_v,2);
      }	
-    //
+    //Minimize the use of actuators
+    for (int t =0; t < N-1; t++ )
+	{
+	  fg[0] += CppAD::pow(vars[delta_start + t],2);
+          fg[0] += CppAD::pow(vars[a_start + t],2);
+        }
+
+    // Minimize the value gap between sequential actuations
+     for (int t =0; t < N-2; t++ )
+	{
+	  fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t],2);
+          fg[0] += CppAD::pow(vars[a_start + t + 1]- vars[a_start + t],2);
+        }
+
+
     // Setup Constraints
     //
     // NOTE: In this section you'll setup the model constraints.
@@ -97,6 +111,13 @@ class FG_eval {
       AD<double> psi0 = vars[psi_start + t - 1];
       AD<double> cte0 = vars[cte_start + t - 1 ];
       AD<double> epsi0 = vars[epsi_start + t - 1];
+      
+      // Only cosider the actuation at time t
+      AD<double> delta0 = vars[delta_start + t -1];
+      AD<double> a0 = vars[a_start + t -1];
+     
+      AD<double> f0 = coeffs[0] + coeffs[1] * x0;
+      AD<double> psides0 = CppAD::atan(coeffs[1]);
 
       // Here's `x` to get you started.
       // The idea here is to constraint this value to be 0.
@@ -108,10 +129,10 @@ class FG_eval {
       // TODO: Setup the rest of the model constraints
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
-      fg[1 + psi_start + t] = psi1 - (psi0 + (v0/Lf) * delta_start * dt);
-      fg[1 + v_start + t] = v1 - (v0 + a_start * dt);
-      fg[1 + cte_start + t] = cte1 - (cte0 + v0 * CppAD::sin(epsi0) * dt);
-      fg[1 + epsi_start +t] = epsi1 - (epsi0 + (v0/Lf) * delta_start * dt);
+      fg[1 + psi_start + t] = psi1 - (psi0 + (v0/Lf) * delta0 * dt);
+      fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
+      fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
+      fg[1 + epsi_start + t] = epsi1 - ((psi0-psides0) + (v0/Lf) * delta0 * dt);
     }
   }
 };
@@ -292,11 +313,11 @@ int main() {
   double y_pred = polyeval(coeffs,x);
   // TODO: calculate the cross track error
   double cte =(y_pred - y);
-  std::cout <<"CTE is :" << '\n' << cte << '\n' ;
+  //std::cout <<"CTE is :" << '\n' << cte << '\n' ;
   
   // TODO: calculate the orientation error
   double epsi = psi- atan(coeffs[1]) ;
-  std::cout << " Orientation error is :" << '\n' << epsi << std::endl;
+ // std::cout << " Orientation error is :" << '\n' << epsi << std::endl;
 
   Eigen::VectorXd state(6);
   state << x, y, psi, v, cte, epsi;
@@ -326,29 +347,29 @@ int main() {
     a_vals.push_back(vars[7]);
 
     state << vars[0], vars[1], vars[2], vars[3], vars[4], vars[5];
-    //std::cout << "x = " << vars[0] << std::endl;
-    //std::cout << "y = " << vars[1] << std::endl;
-    //std::cout << "psi = " << vars[2] << std::endl;
-    //std::cout << "v = " << vars[3] << std::endl;
-    //std::cout << "cte = " << vars[4] << std::endl;
-    //std::cout << "epsi = " << vars[5] << std::endl;
-    //std::cout << "delta = " << vars[6] << std::endl;
-    //std::cout << "a = " << vars[7] << std::endl;
-    //std::cout << std::endl;
+    std::cout << "x = " << vars[0] << std::endl;
+    std::cout << "y = " << vars[1] << std::endl;
+    std::cout << "psi = " << vars[2] << std::endl;
+    std::cout << "v = " << vars[3] << std::endl;
+    std::cout << "cte = " << vars[4] << std::endl;
+    std::cout << "epsi = " << vars[5] << std::endl;
+    std::cout << "delta = " << vars[6] << std::endl;
+    std::cout << "a = " << vars[7] << std::endl;
+    std::cout << std::endl;
   }
 
   // Plot values
   // NOTE: feel free to play around with this.
   // It's useful for debugging!
-  //plt::subplot(3, 1, 1);
-  //plt::title("CTE");
-  //plt::plot(cte_vals);
-  //plt::subplot(3, 1, 2);
-  //plt::title("Delta (Radians)");
-  //plt::plot(delta_vals);
-  //plt::subplot(3, 1, 3);
-  //plt::title("Velocity");
-  //plt::plot(v_vals);
+   plt::subplot(3, 1, 1);
+   plt::title("CTE");
+   plt::plot(cte_vals);
+   plt::subplot(3, 1, 2);
+   plt::title("Delta (Radians)");
+   plt::plot(delta_vals);
+   plt::subplot(3, 1, 3);
+   plt::title("Velocity");
+   plt::plot(v_vals);
 
-  //plt::show();
+   plt::show();
 }
