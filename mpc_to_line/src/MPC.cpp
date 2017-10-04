@@ -59,7 +59,7 @@ class FG_eval {
     // Reference State Cost
     // TODO: Define the cost related the reference state and
     // any anything you think may be beneficial
-    for (t = 0; t < N ; ++t)
+    for (int t = 0; t < N ; ++t)
     {
     	fg[0] += CppAD::pow(vars[cte_start + t],2);
     	fg[0] += CppAD::pow(vars[epsi_start + t],2);
@@ -86,12 +86,13 @@ class FG_eval {
     for (int t = 1; t < N; t++) {
       AD<double> x1 = vars[x_start + t];
       AD<double> y1 = vars[y_start + t];
+      AD<double> v1 = vars[v_start + t ];
       AD<double> psi1 = vars[psi_start + t];
       AD<double> cte1 = vars[cte_start + t];
       AD<double> epsi1 = vars[epsi_start + t];		
 
       AD<double> x0 = vars[x_start + t - 1];
-      AD<double> psi0 = vars[psi_start + t - 1];
+      AD<double> y0 = vars[y_start + t - 1];
       AD<double> v0 = vars[v_start + t - 1];
       AD<double> psi0 = vars[psi_start + t - 1];
       AD<double> cte0 = vars[cte_start + t - 1 ];
@@ -109,7 +110,7 @@ class FG_eval {
       fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
       fg[1 + psi_start + t] = psi1 - (psi0 + (v0/Lf) * delta_start * dt);
       fg[1 + v_start + t] = v1 - (v0 + a_start * dt);
-      fg[1 + cte_start + t] = cte1 - (cte0 + V0 * CppAD::sin(epsi0) * dt);
+      fg[1 + cte_start + t] = cte1 - (cte0 + v0 * CppAD::sin(epsi0) * dt);
       fg[1 + epsi_start +t] = epsi1 - (epsi0 + (v0/Lf) * delta_start * dt);
     }
   }
