@@ -11,8 +11,8 @@ namespace plt = matplotlibcpp;
 using CppAD::AD;
 
 // TODO: Set N and dt
-size_t N = 15 ;
-double dt = 0.2 ;
+size_t N = 25 ;
+double dt = 0.05 ;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -63,7 +63,7 @@ class FG_eval {
     {
     	fg[0] += CppAD::pow(vars[cte_start + t],2);
     	fg[0] += CppAD::pow(vars[epsi_start + t],2);
-	fg[0] += CppAD::pow(vars[v_start + 1] - ref_v,2);
+	    fg[0] += CppAD::pow(vars[v_start + t] - ref_v,2);
      }	
     //Minimize the use of actuators
     for (int t =0; t < N-1; t++ )
