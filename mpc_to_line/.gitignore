@@ -14,7 +14,7 @@ Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, An
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
-
+.idea/
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
